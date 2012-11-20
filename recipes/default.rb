@@ -17,12 +17,26 @@
 # limitations under the License.
 #
 
-node.mumble.packages.each do |mumble_package|
-  package mumble_package
+package "mumble-server" do
+  action :install
 end
 
 template "/etc/mumble-server.ini" do
+  source "mumble-server.ini.erb"
   owner "root"
-  group "mumble"
-  mode 00640
+  group "mumble-server"
+  mode  0640
+
+  notifies :restart, "service[mumble-server]"
 end
+
+service "mumble-server" do
+  supports :restart => true
+  action [ :enable, :start ]
+end
+
+execute "set-mumble-superuser-passwd" do
+  command "murmurd -ini /etc/mumble-server.ini -supw #{node['mumble']['superuser']['passwd']} && touch /var/lib/mumble-server/supw-set"
+  creates "/var/lib/mumble-server/supw-set"
+end
+  
