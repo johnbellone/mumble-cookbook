@@ -13,3 +13,6 @@ suites:
   - name: default
     run_list:
       - recipe[mumble::default]
+  - name: server
+    provisioner:
+      named_run_list: server
