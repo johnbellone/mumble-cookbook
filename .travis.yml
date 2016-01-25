@@ -1,0 +1,11 @@
+---
+language: ruby
+sudo: false
+script: bundle exec rake travis
+rvm:
+  - 2.2
+branches:
+  only:
+    - master
+matrix:
+  fast_finish: true
